@@ -41,6 +41,20 @@ uv run poc serve          # :8000
 cd web && npm install && npm run dev   # :5173, separate terminal, dev only
 ```
 
+> **Node version note:** `web/`'s Vite 8 / rolldown needs Node ^20.19 or
+> >=22.12. If the system `node` is older (this dev box ships 18.20.6), `npm
+> run dev` fails with `SyntaxError: ... does not provide an export named
+> 'styleText'`. Fix: download a standalone newer Node (no sudo/system change
+> needed) and use it just for this folder:
+> ```bash
+> mkdir -p ~/.local/node22 && cd ~/.local/node22
+> curl -sL https://nodejs.org/dist/v22.14.0/node-v22.14.0-linux-x64.tar.xz | tar -xJ --strip-components=1
+> cd web && ~/.local/node22/bin/node ~/.local/node22/bin/npm install --legacy-peer-deps
+> ~/.local/node22/bin/node node_modules/vite/bin/vite.js
+> ```
+> (`--legacy-peer-deps` also works around an unrelated npm 10.9.x arborist bug —
+> `Cannot read properties of null (reading 'edgesOut')` — hit on a clean install.)
+
 **knowledge-graph-poc** (CLI, run on demand):
 ```bash
 cd knowledge-graph-poc
