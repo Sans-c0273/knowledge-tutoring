@@ -43,8 +43,8 @@ def test_R21_stage_names_are_the_four_model_stages():
     assert tuple(STAGES) == ("describe", "atomize", "edges", "dedup")
 
 
-def test_R21_provider_vocabulary_is_exactly_three():
-    assert set(PROVIDERS) == {"claude_subscription", "openrouter", "anthropic_api"}
+def test_R21_provider_vocabulary_is_exactly_four():
+    assert set(PROVIDERS) == {"claude_subscription", "openrouter", "anthropic_api", "azure_foundry"}
 
 
 # --------------------------------------------------------- happy loading
@@ -311,7 +311,7 @@ def _credentials(cfg: Config) -> dict[str, str]:
 
 def test_R18_dump_credentials_both_absent(make_project):
     creds = _credentials(load_config(make_project({"llm.provider": "claude_subscription"})))
-    assert creds == {"OPENROUTER_API_KEY": "absent", "ANTHROPIC_API_KEY": "absent"}
+    assert creds == {"OPENROUTER_API_KEY": "absent", "ANTHROPIC_API_KEY": "absent", "AZURE_FOUNDRY_API_KEY": "absent"}
 
 
 def test_R18_dump_credentials_both_present_from_env(make_project, monkeypatch):
@@ -319,14 +319,14 @@ def test_R18_dump_credentials_both_present_from_env(make_project, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", FAKE_ANTHROPIC_KEY)
     cfg = load_config(make_project({"llm.provider": "openrouter"}))
     creds = _credentials(cfg)
-    assert creds == {"OPENROUTER_API_KEY": "present", "ANTHROPIC_API_KEY": "present"}
+    assert creds == {"OPENROUTER_API_KEY": "present", "ANTHROPIC_API_KEY": "present", "AZURE_FOUNDRY_API_KEY": "absent"}
     text = json.dumps(cfg.dump(), default=str)
     assert FAKE_OR_KEY not in text and FAKE_ANTHROPIC_KEY not in text and "TESTONLY" not in text
 
 
 def test_R18_dump_credentials_mixed_dotenv_present_other_absent(make_project):
     cfg = load_config(make_project({"llm.provider": "openrouter"}, env_text=f"OPENROUTER_API_KEY={FAKE_OR_KEY}\n"))
-    assert _credentials(cfg) == {"OPENROUTER_API_KEY": "present", "ANTHROPIC_API_KEY": "absent"}
+    assert _credentials(cfg) == {"OPENROUTER_API_KEY": "present", "ANTHROPIC_API_KEY": "absent", "AZURE_FOUNDRY_API_KEY": "absent"}
 
 
 def test_R18_dump_credentials_unselected_provider_key_is_still_reported(make_project, monkeypatch):

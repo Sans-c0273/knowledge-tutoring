@@ -33,8 +33,10 @@ def test_R19_shipped_config_is_version_2(shipped):
     assert shipped["version"] == 2
 
 
-def test_R21_shipped_provider_is_claude_subscription(shipped):
-    assert shipped["llm"]["provider"] == "claude_subscription"
+def test_R21_shipped_provider_is_azure_foundry(shipped):
+    # This is the `socratic-tutor-azure` fork's wired default (see azure-foundry-adapter/);
+    # the upstream kg-mapper-poc project ships `claude_subscription` instead.
+    assert shipped["llm"]["provider"] == "azure_foundry"
 
 
 def test_R8_shipped_schema_is_one_of_the_two(shipped):
@@ -91,12 +93,16 @@ def test_R18_shipped_config_contains_no_credential(shipped):
     assert "ANTHROPIC_API_KEY" not in code_only
 
 
-def test_R18_shipped_config_loads_through_kg_config_without_credentials():
+def test_R18_shipped_config_loads_through_kg_config():
     from kg.config import load_config
 
+    # This fork ships azure_foundry as the default provider, which needs a
+    # credential to load (unlike claude_subscription's OAuth-only flow) — this
+    # repo's own .env supplies AZURE_FOUNDRY_API_KEY, so the load succeeds and
+    # returns a real (non-None) api_key.
     cfg = load_config(KG_YAML)
-    assert cfg.llm.provider == "claude_subscription"
-    assert cfg.llm.api_key is None
+    assert cfg.llm.provider == "azure_foundry"
+    assert cfg.llm.api_key is not None
     assert cfg.sandbox.resolve("inbox", ".") == REPO / "data/inbox"
 
 
@@ -115,7 +121,7 @@ def test_R18_env_example_has_no_real_secret():
         if not s or s.startswith("#"):
             continue
         key, _, value = s.partition("=")
-        assert key.strip() in {"OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"}, f"unexpected key in .env.example: {key}"
+        assert key.strip() in {"OPENROUTER_API_KEY", "ANTHROPIC_API_KEY", "AZURE_FOUNDRY_API_KEY"}, f"unexpected key in .env.example: {key}"
         assert value.strip() == "", f"{key} must be empty in .env.example"
 
 

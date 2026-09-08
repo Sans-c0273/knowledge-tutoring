@@ -12,7 +12,7 @@ paths:                            # relative to the directory containing kg.yaml
   runs: data/runs
 
 llm:
-  provider: claude_subscription   # claude_subscription | openrouter | anthropic_api   (R21)
+  provider: azure_foundry         # claude_subscription | openrouter | anthropic_api | azure_foundry   (R21)
   repair_retries: 2               # client-side JSON/Pydantic repair attempts per call (0 = fail on first bad output)
   max_output_tokens: 8000
   stage_timeout_s: 300
@@ -48,6 +48,15 @@ llm:
       claude-haiku-4-5-20251001: { input: 1, output: 5 }
       cache_read_multiplier: 0.10
       cache_write_multiplier: 1.25
+
+  azure_foundry:                  # Provider 4 — Azure AI Foundry / Azure OpenAI via openai.AzureOpenAI
+    endpoint: https://sans-mekrnu3n-eastus2.cognitiveservices.azure.com
+    api_version: "2024-12-01-preview"
+    models:                       # stage -> Azure *deployment name*; gpt-4o-mini covers vision (describe) too
+      describe: gpt-4o-mini
+      atomize:  gpt-4o-mini
+      edges:    gpt-4o-mini
+      dedup:    gpt-4o-mini
 
 chunking:
   target_tokens: 3000

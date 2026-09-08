@@ -50,6 +50,16 @@ def _build(provider_name: str, settings: Settings) -> LLMProvider:
             api_key=settings.openai_compat_api_key,
             timeout_s=settings.openai_compat_timeout_s,
         )
+    if provider_name == "azure_foundry":
+        from socratic_tutor.providers.azure_foundry import AzureFoundryProvider
+
+        return AzureFoundryProvider(
+            endpoint=settings.azure_foundry_endpoint,
+            deployment=settings.azure_foundry_deployment,
+            api_key=settings.azure_foundry_api_key,
+            api_version=settings.azure_foundry_api_version,
+            timeout_s=settings.azure_foundry_timeout_s,
+        )
     raise ConfigError(f"unknown provider {provider_name!r}; expected one of {', '.join(PROVIDERS)}")
 
 

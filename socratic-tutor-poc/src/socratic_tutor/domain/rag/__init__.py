@@ -14,8 +14,10 @@ from __future__ import annotations
 
 from socratic_tutor.domain.rag.chunker import Chunk, chunk_segments
 from socratic_tutor.domain.rag.embeddings import (
+    AzureEmbedder,
     BGEM3Embedder,
     Embedder,
+    EmbedderError,
     FakeEmbedder,
     get_embedder,
 )
@@ -37,9 +39,11 @@ from socratic_tutor.domain.rag.store import StoreIntegrityError, query, upsert_c
 
 __all__ = [
     "ANSWER_KEY_PATTERNS",
+    "AzureEmbedder",
     "BGEM3Embedder",
     "Chunk",
     "Embedder",
+    "EmbedderError",
     "FakeEmbedder",
     "IngestResult",
     "ParseError",

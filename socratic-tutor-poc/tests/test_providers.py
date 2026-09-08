@@ -56,7 +56,9 @@ def wire(intent: Intent, confidence: float = 0.9) -> IntentClassification:
 
 def test_factory_defaults_every_role_to_the_subscription() -> None:
     """The zero-provisioning path: the machine's existing `claude login`, no keys."""
-    settings = Settings()
+    # _env_file=None: isolate from this repo's own .env (which this fork points
+    # at azure_foundry for a real run) so this asserts the class-level default.
+    settings = Settings(_env_file=None)
     for role in ("intent", "evaluation", "generation"):
         assert isinstance(get_provider(role, settings), ClaudeSubscriptionProvider)
 
@@ -64,6 +66,7 @@ def test_factory_defaults_every_role_to_the_subscription() -> None:
 def test_factory_swaps_one_role_to_openai_compat() -> None:
     """R21: Call C moves to OpenRouter without touching a line of pipeline code."""
     settings = Settings(
+        _env_file=None,
         generation_provider="openai_compat",
         generation_model="qwen/qwen3-32b-instruct",
         openai_compat_base_url="https://openrouter.ai/api/v1",
@@ -97,9 +100,9 @@ def test_openai_compat_without_a_key_fails_with_a_named_variable() -> None:
 def test_no_provider_construction_requires_a_credential_up_front() -> None:
     """Neither Claude path checks for a key: the subscription has none, and the
     Anthropic SDK resolves its own. Only `openai_compat` needs one, and it says so."""
-    assert isinstance(get_provider("intent", Settings()), ClaudeSubscriptionProvider)
+    assert isinstance(get_provider("intent", Settings(_env_file=None)), ClaudeSubscriptionProvider)
     assert isinstance(
-        get_provider("intent", Settings(intent_provider="anthropic")), AnthropicProvider
+        get_provider("intent", Settings(_env_file=None, intent_provider="anthropic")), AnthropicProvider
     )
 
 

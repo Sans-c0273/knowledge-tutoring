@@ -21,15 +21,16 @@ from dotenv import dotenv_values
 from kg.paths import KINDS, Sandbox, SandboxViolation
 
 STAGES: tuple[str, ...] = ("describe", "atomize", "edges", "dedup")
-PROVIDERS: tuple[str, ...] = ("claude_subscription", "openrouter", "anthropic_api")
+PROVIDERS: tuple[str, ...] = ("claude_subscription", "openrouter", "anthropic_api", "azure_foundry")
 SCHEMA_NAMES: tuple[str, ...] = ("education", "general")
 SUPPORTED_VERSION = 2
 
-CREDENTIAL_VARS: tuple[str, ...] = ("OPENROUTER_API_KEY", "ANTHROPIC_API_KEY")
+CREDENTIAL_VARS: tuple[str, ...] = ("OPENROUTER_API_KEY", "ANTHROPIC_API_KEY", "AZURE_FOUNDRY_API_KEY")
 _CREDENTIAL_FOR_PROVIDER: dict[str, str | None] = {
     "claude_subscription": None,
     "openrouter": "OPENROUTER_API_KEY",
     "anthropic_api": "ANTHROPIC_API_KEY",
+    "azure_foundry": "AZURE_FOUNDRY_API_KEY",
 }
 
 
@@ -88,7 +89,18 @@ class AnthropicApiSettings:
     pricing_usd_per_mtok: dict[str, Any]
 
 
-ProviderSettings = ClaudeSubscriptionSettings | OpenRouterSettings | AnthropicApiSettings
+@dataclass(frozen=True)
+class AzureFoundrySettings:
+    """Provider 4 — Azure AI Foundry / Azure OpenAI via `openai.AzureOpenAI` (see
+    `kg.llm.adapters.azure_foundry`). `models` maps stage -> Azure *deployment name*,
+    same convention as `OpenRouterSettings.models`."""
+
+    endpoint: str
+    api_version: str
+    models: dict[str, str]
+
+
+ProviderSettings = ClaudeSubscriptionSettings | OpenRouterSettings | AnthropicApiSettings | AzureFoundrySettings
 
 
 @dataclass(frozen=True, repr=False)
@@ -359,6 +371,12 @@ def _parse_provider_settings(doc: Mapping[str, Any], provider: str) -> ProviderS
             models=_models(doc, f"{base}.models"),
             pricing_usd_per_mtok=_parse_pricing(doc, f"{base}.pricing_usd_per_mtok"),
         )
+    if provider == "azure_foundry":
+        return AzureFoundrySettings(
+            endpoint=_str(doc, f"{base}.endpoint"),
+            api_version=_str(doc, f"{base}.api_version"),
+            models=_models(doc, f"{base}.models"),
+        )
     raise ConfigError(f"kg.yaml: 'llm.provider' must be one of {', '.join(PROVIDERS)} (got {provider!r})")
 
 
@@ -562,4 +580,8 @@ def adapter_factory(cfg: Config) -> Any:
         from kg.llm.adapters.anthropic_api import AnthropicApiAdapter
 
         return AnthropicApiAdapter(cfg)
+    if provider == "azure_foundry":
+        from kg.llm.adapters.azure_foundry import AzureFoundryAdapter
+
+        return AzureFoundryAdapter(cfg)
     raise ConfigError(f"llm.provider {provider!r} is not a known provider; expected one of {', '.join(PROVIDERS)}")

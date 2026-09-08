@@ -197,7 +197,11 @@ def anthropic_wire(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
 
 
 def openrouter_settings() -> Settings:
+    # _env_file=None: isolate from this repo's own .env so every field not
+    # passed explicitly here is the class-level default, not whatever a real
+    # local run happens to have configured.
     return Settings(
+        _env_file=None,
         generation_provider="openai_compat",
         generation_model=OPENROUTER_MODEL,
         openai_compat_base_url="https://openrouter.ai/api/v1",
@@ -243,7 +247,7 @@ async def test_the_openrouter_request_body_is_well_formed(openrouter: dict[str, 
 
 
 def anthropic_settings() -> Settings:
-    return Settings(generation_provider="anthropic", generation_model="claude-sonnet-5")
+    return Settings(_env_file=None, generation_provider="anthropic", generation_model="claude-sonnet-5")
 
 
 async def test_the_same_turn_on_the_anthropic_config_goes_to_anthropic(
@@ -338,7 +342,9 @@ def test_the_factory_is_the_only_thing_that_picks(monkeypatch: pytest.MonkeyPatc
     """Same role, same call, different class — decided by config and nothing else."""
     from socratic_tutor.providers import get_provider
 
-    assert isinstance(get_provider("generation", Settings()), ClaudeSubscriptionProvider)
+    # _env_file=None: isolate from this repo's own .env (which this fork points at
+    # azure_foundry for a real run) so this asserts the class-level default only.
+    assert isinstance(get_provider("generation", Settings(_env_file=None)), ClaudeSubscriptionProvider)
     assert isinstance(get_provider("generation", anthropic_settings()), AnthropicProvider)
     assert isinstance(get_provider("generation", openrouter_settings()), OpenAICompatProvider)
     # …while the roles that were not swapped stay where they were.

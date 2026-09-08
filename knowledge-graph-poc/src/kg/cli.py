@@ -21,7 +21,7 @@ from pathlib import Path
 
 # Mirror of kg.config.PROVIDERS for the argparse `choices`; kept import-light here
 # and cross-checked against the real tuple in cmd_selftest (raises on drift).
-_PROVIDER_CHOICES = ("claude_subscription", "openrouter", "anthropic_api")
+_PROVIDER_CHOICES = ("claude_subscription", "openrouter", "anthropic_api", "azure_foundry")
 
 # Stripped from the selftest environment in addition to kg.config.CREDENTIAL_VARS:
 # the Claude Code CLI and the OpenAI SDK also honour these, and a leaked one would

@@ -182,7 +182,7 @@ def test_R20_conftest_clean_env_strips_the_same_vars_as_the_cli():
 
     cli_stripped = set(CREDENTIAL_VARS) | set(getattr(kg.cli, "_EXTRA_STRIPPED_VARS", ()))
     assert set(STRIPPED_VARS) == cli_stripped, "tests/conftest.py must strip exactly what `kg selftest` strips"
-    assert len(STRIPPED_VARS) == 5
+    assert len(STRIPPED_VARS) == 6  # 3 credential vars (now incl. AZURE_FOUNDRY_API_KEY) + 3 extras
 
 
 def test_R20_python_dash_m_kg_cli_selftest_help_runs():

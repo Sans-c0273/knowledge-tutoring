@@ -23,7 +23,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 Role = Literal["intent", "evaluation", "generation"]
-ProviderName = Literal["claude_subscription", "anthropic", "openai_compat"]
+ProviderName = Literal["claude_subscription", "anthropic", "openai_compat", "azure_foundry"]
 
 ROLES: tuple[str, ...] = get_args(Role)
 PROVIDERS: tuple[str, ...] = get_args(ProviderName)
@@ -62,6 +62,13 @@ class Settings(BaseSettings):
     openai_compat_api_key: str | None = Field(default=None, repr=False)
     openai_compat_timeout_s: float = 120.0
 
+    # --- Azure AI Foundry / Azure OpenAI adapter
+    azure_foundry_endpoint: str = ""
+    azure_foundry_api_key: str | None = Field(default=None, repr=False)
+    azure_foundry_deployment: str = ""
+    azure_foundry_api_version: str = "2024-10-21"
+    azure_foundry_timeout_s: float = 120.0
+
     # --- generation / classification budgets
     structured_max_tokens: int = 512
     generation_max_tokens: int = 2000
@@ -70,6 +77,18 @@ class Settings(BaseSettings):
 
     # --- retrieval
     embedding_model: str = "BAAI/bge-m3"
+
+    # --- embeddings backend: "local" runs BGE-M3 on this machine; "azure_foundry"
+    # calls out to an Azure AI Foundry / Azure OpenAI embedding deployment instead,
+    # for a machine that can't run the local model.
+    embedding_provider: Literal["local", "azure_foundry"] = "local"
+    embedding_azure_endpoint: str = ""
+    embedding_azure_api_key: str | None = Field(default=None, repr=False)
+    embedding_azure_deployment: str = ""
+    embedding_azure_api_version: str = "2024-10-21"
+    embedding_azure_timeout_s: float = 60.0
+    #: Texts per HTTP request; keeps well under Azure's per-request token/array limits.
+    embedding_azure_batch_size: int = 96
 
     # --- paths (chroma_dir / uploads_dir derive from data_dir when unset)
     content_dir: Path = PROJECT_ROOT / "content"
@@ -113,8 +132,13 @@ class Settings(BaseSettings):
 
     def dump(self) -> dict[str, object]:
         """Redacted view for traces and the glass-box UI. The key appears only as set/unset."""
-        data = self.model_dump(mode="json", exclude={"openai_compat_api_key"})
+        data = self.model_dump(
+            mode="json",
+            exclude={"openai_compat_api_key", "azure_foundry_api_key", "embedding_azure_api_key"},
+        )
         data["openai_compat_api_key"] = "present" if self.openai_compat_api_key else "absent"
+        data["azure_foundry_api_key"] = "present" if self.azure_foundry_api_key else "absent"
+        data["embedding_azure_api_key"] = "present" if self.embedding_azure_api_key else "absent"
         return data
 
 
