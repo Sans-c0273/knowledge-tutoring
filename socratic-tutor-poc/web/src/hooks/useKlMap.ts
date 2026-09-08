@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
-import { SESSION } from '../config';
 import type { KlMap } from '../types';
 
-export function useKlMap(enabled = true) {
+/** Loads the KL Map for `courseId`, re-fetching whenever it changes (the
+ * Knowledge Map view's course switcher passes a different id than the active
+ * session's). */
+export function useKlMap(courseId: string, enabled = true) {
   const [map, setMap] = useState<KlMap | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
+    setMap(null);
+    setError(null);
     api
-      .getKlMap(SESSION.course_id)
+      .getKlMap(courseId)
       .then((loaded) => {
         if (!cancelled) setMap(loaded);
       })
@@ -29,7 +33,7 @@ export function useKlMap(enabled = true) {
     return () => {
       cancelled = true;
     };
-  }, [enabled]);
+  }, [courseId, enabled]);
 
   return { map, error };
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { OPERATOR_MODE, USE_MOCKS } from './config';
+import { OPERATOR_MODE, SESSION, USE_MOCKS } from './config';
 import { useChat } from './hooks/useChat';
 import { useKlMap } from './hooks/useKlMap';
 import { IngestView } from './components/IngestView';
@@ -29,7 +29,10 @@ export function App() {
   const [route, setRoute] = useState<Route>(currentRoute);
   // Chat and map state live above the router so a turn survives navigation.
   const chat = useChat();
-  const { map, error: mapError } = useKlMap(OPERATOR_MODE);
+  // Pinned to the active session's course — the tutor must never teach from
+  // whatever course an operator happens to be browsing in the Knowledge Map
+  // view's switcher, so that view keeps its own independent fetch instead.
+  const { map, error: mapError } = useKlMap(SESSION.course_id, OPERATOR_MODE);
 
   useEffect(() => {
     const onHashChange = () => {
