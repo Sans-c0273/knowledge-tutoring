@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import logging
 import re
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -38,6 +39,15 @@ CANDIDATE_MULTIPLIER = 4
 
 _INVALID_NAME_CHARS = re.compile(r"[^a-zA-Z0-9._-]+")
 _clients: dict[str, Any] = {}
+#: Guards first-time construction of a PersistentClient for a given directory.
+#: `upsert_chunks` runs off the event loop via `asyncio.to_thread` (ingest.py),
+#: so concurrent uploads land on real OS threads that can all see an empty
+#: `_clients` at once — Chroma's on-disk bootstrap (sqlite tenant/database rows)
+#: isn't safe against that and fails with "Could not connect to tenant
+#: default_tenant" for whichever thread loses the race. Double-checked locking:
+#: the uncontended read path (the overwhelming majority of calls, once a
+#: directory's client is cached) stays lock-free.
+_clients_lock = threading.Lock()
 
 
 class StoreIntegrityError(Exception):
@@ -76,10 +86,12 @@ def get_client(persist_dir: Path | None = None) -> Any:
     directory.mkdir(parents=True, exist_ok=True)
     key = str(directory.resolve())
     if key not in _clients:
-        _clients[key] = chromadb.PersistentClient(
-            path=key,
-            settings=ChromaSettings(anonymized_telemetry=False, allow_reset=False),
-        )
+        with _clients_lock:
+            if key not in _clients:  # re-check: another thread may have won the race
+                _clients[key] = chromadb.PersistentClient(
+                    path=key,
+                    settings=ChromaSettings(anonymized_telemetry=False, allow_reset=False),
+                )
     return _clients[key]
 
 
