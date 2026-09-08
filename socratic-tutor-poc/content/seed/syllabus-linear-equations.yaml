@@ -1,0 +1,73 @@
+# Syllabus — "Linear Equations" mini-course (seed pack)
+#
+# The teacher-provided topic list (Tech Spec §2.2): the onboarding questionnaire
+# is generated from it, and every student message is mapped onto it before the
+# Student Model and the KL Map are consulted.
+#
+# Topics are listed in teaching order. `id` is shared with the KL Map node of the
+# same concept (content/seed/kl-map-linear-equations.yaml), so a resolved topic
+# hands straight to `klmap.find_start_node`. `aliases` carry the wordings students
+# actually type; they are matched exactly like names.
+course_id: MATH-SEED-01
+course_name: "Linear Equations (synthetic seed course)"
+topics:
+  - id: C001
+    name: "Basic Arithmetic"
+    name_th: "เลขคณิตพื้นฐาน"
+    aliases: ["arithmetic", "การคำนวณพื้นฐาน"]
+  - id: C002
+    name: "Order of Operations"
+    name_th: "ลำดับการดำเนินการ"
+    aliases: ["PEMDAS", "BODMAS"]
+  - id: C003
+    name: "Negative Numbers"
+    name_th: "จำนวนลบ"
+    aliases: ["negatives", "เลขติดลบ"]
+  - id: C004
+    name: "Variables and Expressions"
+    name_th: "ตัวแปรและนิพจน์"
+    aliases: ["algebraic expressions", "นิพจน์พีชคณิต"]
+  - id: C005
+    name: "Evaluating Expressions"
+    name_th: "การหาค่านิพจน์"
+    aliases: ["substitution", "การแทนค่า"]
+  - id: C006
+    name: "Inverse Operations"
+    name_th: "การดำเนินการผกผัน"
+    aliases: ["opposite operations", "การย้ายข้าง"]
+  - id: C007
+    name: "Equation Balance"
+    name_th: "สมดุลของสมการ"
+    aliases: ["balancing equations", "การรักษาสมดุลสมการ"]
+  - id: C008
+    name: "One-Step Linear Equations"
+    name_th: "สมการเชิงเส้นขั้นตอนเดียว"
+    aliases: ["one-step equations", "สมการขั้นตอนเดียว"]
+  - id: C009
+    name: "Two-Step Linear Equations"
+    name_th: "สมการเชิงเส้นสองขั้นตอน"
+    aliases: ["two-step equations", "สมการสองขั้นตอน"]
+  - id: C010
+    name: "Combining Like Terms"
+    name_th: "การรวมพจน์ที่เหมือนกัน"
+    aliases: ["like terms", "พจน์ที่เหมือนกัน"]
+  - id: C011
+    name: "Distributive Property"
+    name_th: "สมบัติการแจกแจง"
+    aliases: ["distribution", "การกระจาย"]
+  - id: C012
+    name: "Variables on Both Sides"
+    name_th: "ตัวแปรทั้งสองข้าง"
+    aliases: ["variables both sides", "ตัวแปรสองข้าง"]
+  - id: C013
+    name: "Checking a Solution"
+    name_th: "การตรวจคำตอบ"
+    aliases: ["verifying a solution", "การตรวจสอบคำตอบ"]
+  - id: C014
+    name: "Word Problems to Equations"
+    name_th: "โจทย์ปัญหาสู่สมการ"
+    aliases: ["word problems", "โจทย์ปัญหา"]
+  - id: C015
+    name: "Linear Inequalities"
+    name_th: "อสมการเชิงเส้น"
+    aliases: ["inequalities", "อสมการ"]

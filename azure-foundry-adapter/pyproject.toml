@@ -1,0 +1,23 @@
+[project]
+name = "azure-foundry-adapter"
+version = "0.1.0"
+description = "Azure AI Foundry LLM adapters for kg_reasoner, knowledge-graph-poc, and socratic-tutor-poc"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+# Only needed if you also want to exercise the knowledge-graph-poc adapter
+# (adapters/knowledge_graph_poc.py) from within this package, e.g. in a unit
+# test that fakes `kg.config`/`kg.llm.adapters.base` — that project's real
+# `openai` dependency is what actually satisfies its `import openai`.
+openai = ["openai>=1.40"]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["azure_foundry_adapter"]

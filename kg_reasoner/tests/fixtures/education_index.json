@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {"id": "edu-0001", "title": "Basic Arithmetic", "aliases": [], "file": "nodes/edu-0001.md", "definition_plain": "Addition, subtraction, multiplication and division of numbers.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=1", "file": "algebra.pdf", "quote": "Numbers can be added, subtracted, multiplied and divided."}], "degree": 1},
+    {"id": "edu-0002", "title": "Inverse Operations", "aliases": [], "file": "nodes/edu-0002.md", "definition_plain": "Operations that undo each other, such as addition and subtraction.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=2", "file": "algebra.pdf", "quote": "Addition and subtraction are inverse operations."}], "degree": 2},
+    {"id": "edu-0003", "title": "Linear Equations", "aliases": ["Linear Equation"], "file": "nodes/edu-0003.md", "definition_plain": "Equations of the form ax + b = c, solved by isolating the variable.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=3", "file": "algebra.pdf", "quote": "A linear equation has the form ax + b = c."}], "degree": 5},
+    {"id": "edu-0004", "title": "Algebra Basics", "aliases": [], "file": "nodes/edu-0004.md", "definition_plain": "The foundational unit covering variables, expressions and equations.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=0", "file": "algebra.pdf", "quote": "This unit introduces algebra."}], "degree": 2},
+    {"id": "edu-0005", "title": "Solve 2x + 4 = 10", "aliases": [], "file": "nodes/edu-0005.md", "definition_plain": "A worked example: subtract 4 from both sides, then divide by 2.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=4", "file": "algebra.pdf", "quote": "2x + 4 = 10 -> 2x = 6 -> x = 3."}], "degree": 1},
+    {"id": "edu-0006", "title": "Variables on Both Sides", "aliases": [], "file": "nodes/edu-0006.md", "definition_plain": "Equations with the variable appearing on both sides, e.g. 2x + 3 = x + 7.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=5", "file": "algebra.pdf", "quote": ""}], "degree": 1},
+    {"id": "edu-0007", "title": "Solving by Balancing", "aliases": [], "file": "nodes/edu-0007.md", "definition_plain": "Framing equation-solving as keeping both sides of a balance equal.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=6", "file": "algebra.pdf", "quote": "Think of the equation as a balance scale."}], "degree": 1},
+    {"id": "edu-0008", "title": "Order of Operations", "aliases": [], "file": "nodes/edu-0008.md", "definition_plain": "The order in which operations are evaluated: parentheses, exponents, multiplication/division, addition/subtraction.", "provider": "test", "model": "test", "sources": [{"locator": "algebra.pdf#page=1", "file": "algebra.pdf", "quote": "PEMDAS gives the order of operations."}], "degree": 1}
+  ],
+  "edges": [
+    {"source": "edu-0001", "target": "edu-0002", "type": "prerequisite_of"},
+    {"source": "edu-0002", "target": "edu-0003", "type": "prerequisite_of"},
+    {"source": "edu-0003", "target": "edu-0004", "type": "part_of"},
+    {"source": "edu-0005", "target": "edu-0003", "type": "example_of"},
+    {"source": "edu-0003", "target": "edu-0006", "type": "prerequisite_of"},
+    {"source": "edu-0007", "target": "edu-0003", "type": "refines"},
+    {"source": "edu-0008", "target": "edu-0004", "type": "part_of"}
+  ],
+  "meta": {"schema": "education", "corpus": "edu", "node_count": 8, "edge_count": 7, "dangling_edges": 0, "problems": []}
+}

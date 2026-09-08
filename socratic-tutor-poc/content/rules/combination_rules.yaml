@@ -1,0 +1,75 @@
+# Combination Rules — Tech Spec §3.3 ("can they coexist?")
+#
+# Three constraints:
+#   1. max 1 primary + 2 supporting strategies per turn;
+#   2. hint-first always wins over an immediate full answer — a hint strategy and
+#      a full-answer strategy never share a turn, and the hint takes the primary
+#      slot when both are selected;
+#   3. only the declared primary -> supporting sets may coexist; any other
+#      supporting strategy is dropped and the drop is recorded in the trace.
+#
+# `source: spec` combinations are the four listed in §3.3 verbatim.
+# `source: extension` combinations exist because the §3.1 Trigger Matrix selects
+# S03 and S05 as primaries and the fallback selects S07, none of which §3.3
+# declares. Without them a spec-faithful trigger row would have all of its
+# supporting strategies dropped. Reported to the architect as a spec gap.
+
+version: "1.0.0"
+description: >-
+  Combination Rules from Technical Specification §3.3, extended with the
+  primaries the Trigger Matrix uses but §3.3 does not declare (S03, S05, S07).
+
+max_primary: 1
+max_supporting: 2
+
+# Hint-first rule (§3.3). A strategy listed in `full_answer_strategies` may not
+# appear in the same turn as one from `hint_strategies`; the hint wins.
+hint_first_beats_full_answer: true
+hint_strategies: [S04]
+full_answer_strategies: [S01]
+
+# Strategies that only ask a question and emit no clue toward the answer. The
+# Teaching Policy `allow_check` flag gates these, and they are what a context
+# prohibiting every clue-emitting strategy (assessment) falls back to.
+check_strategies: [S07]
+
+# Tech Spec §5.2: `cannot_evaluate` is legitimate and routes the turn to S07
+# Check Understanding, never to invented feedback.
+cannot_evaluate_primary: S07
+
+combinations:
+  - primary: S01
+    source: spec
+    supporting: [S02, S07]
+    sequence: [Answer, Example, Check]
+
+  - primary: S03
+    source: extension
+    supporting: [S07]
+    sequence: [Steps, Check]
+
+  - primary: S04
+    source: spec
+    supporting: [S03, S07]
+    sequence: [Hint, Student tries, Guide]
+
+  - primary: S05
+    source: extension
+    supporting: [S02, S07]
+    sequence: [Re-explain, Example, Check]
+
+  - primary: S06
+    source: spec
+    supporting: [S04, S05, S07]
+    sequence: [Evaluate, Feedback, Next action]
+
+  - primary: S07
+    source: extension
+    note: The Trigger Matrix fallback primary; a single question stands alone.
+    supporting: []
+    sequence: [Check]
+
+  - primary: S08
+    source: spec
+    supporting: [S06, S07]
+    sequence: [Question, Answer, Feedback]

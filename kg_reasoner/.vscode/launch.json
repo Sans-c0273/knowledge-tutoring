@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "kg_reasoner: CLI (edit args below)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "kg_reasoner.cli",
+      "args": [
+        "--index", "${workspaceFolder}/../knowledge-graph-poc/data/graph/_index.json",
+        "--topic", "Power-ups",
+        "--intent", "clarify",
+        "--learner-state", "confused"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "kg_reasoner: pytest (all tests)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-q"],
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

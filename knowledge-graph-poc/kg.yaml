@@ -1,0 +1,78 @@
+version: 2
+corpus:
+  slug: sample
+  name: Sample corpus
+  schema: general                 # education | general  (R8)
+
+paths:                            # relative to the directory containing kg.yaml; absolute paths refused
+  inbox: data/inbox
+  converted: data/converted
+  graph: data/graph
+  processed: data/processed
+  runs: data/runs
+
+llm:
+  provider: claude_subscription   # claude_subscription | openrouter | anthropic_api   (R21)
+  repair_retries: 2               # client-side JSON/Pydantic repair attempts per call (0 = fail on first bad output)
+  max_output_tokens: 8000
+  stage_timeout_s: 300
+
+  claude_subscription:            # Provider 1 — Claude Agent SDK on the logged-in Claude Code subscription
+    models:                       # full IDs recommended for reproducible reports; aliases (sonnet/opus/haiku) also accepted
+      describe: claude-sonnet-5
+      atomize:  claude-sonnet-5
+      edges:    claude-sonnet-5
+      dedup:    claude-sonnet-5
+    effort: medium                # low | medium | high  (ClaudeAgentOptions.effort; verified field)
+    rate_limit_wait_minutes: 30   # if a five_hour/seven_day window is hit and resets sooner than this, wait; else defer
+
+  openrouter:                     # Provider 2 — OpenRouter via the openai client
+    base_url: https://openrouter.ai/api/v1
+    models:                       # vendor/model form; all four verified with supported_parameters ∋ structured_outputs
+      describe: google/gemini-2.5-flash          # image input ✓, $0.30 / $2.50 per MTok
+      atomize:  anthropic/claude-sonnet-5        # same model as provider 1 → isolates the provider effect
+      edges:    anthropic/claude-sonnet-5
+      dedup:    openai/gpt-5-mini                # $0.25 / $2.00 per MTok
+    provider:                     # OpenRouter provider-routing block (sent as extra_body.provider)
+      require_parameters: true    # only route to upstreams that honour response_format json_schema
+      data_collection: deny       # route only to upstreams that do not store prompts (course material may be non-public)
+      order: []                   # optional provider slugs to try first
+      allow_fallbacks: true
+    app_title: kg-mapper-poc      # X-Title header (OpenRouter attribution; optional)
+
+  anthropic_api:                  # Provider 3 (optional) — Console API key, anthropic SDK messages.parse
+    models: { describe: claude-sonnet-5, atomize: claude-sonnet-5, edges: claude-sonnet-5, dedup: claude-sonnet-5 }
+    pricing_usd_per_mtok:         # this adapter has no server-reported cost, so list prices live here
+      claude-opus-5:             { input: 5, output: 25 }
+      claude-sonnet-5:           { input: 2, output: 10 }
+      claude-haiku-4-5-20251001: { input: 1, output: 5 }
+      cache_read_multiplier: 0.10
+      cache_write_multiplier: 1.25
+
+chunking:
+  target_tokens: 3000
+  max_tokens: 4000
+  min_tokens: 150
+
+limits:
+  max_nodes_per_chunk: 25
+  max_dedup_pairs: 20
+  roster_cap: 400
+  soft_budget_usd: 2.00           # applies to providers that report cost (openrouter, anthropic_api); ignored on subscription
+
+dedup:
+  threshold: 0.60
+  write_same_as: false
+  pairs_per_call: 10              # candidate pairs adjudicated per dedup call (≥ 1)
+
+image:
+  max_long_edge_px: 1568
+
+web:
+  timeout_s: 20
+  user_agent: kg-mapper-poc/0.1
+
+relevance_sample:
+  n: 30
+  bands: [[0, 39], [40, 70], [71, 100]]
+  seed: 1

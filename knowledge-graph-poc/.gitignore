@@ -1,0 +1,19 @@
+# Virtual environment
+.venv/
+
+# Credentials (R18) — only .env.example is committed
+.env
+.env*
+!.env.example
+
+# Runtime data: inbox, converted, graph, processed, runs (DESIGN §20)
+data/**
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.DS_Store

@@ -1,0 +1,224 @@
+# Trigger Matrix — Tech Spec §3.1 ("which strategy?")
+#
+# Each row is keyed on four fields: intent, learner_state, student_level,
+# special_handling. `any` is a wildcard that matches every value of that field.
+#
+# Matching (implemented in pedagogy/strategy.py):
+#   1. a row matches when every key field is `any` or equals the lookup value;
+#   2. candidates sort by (priority DESC, specificity DESC, row id ASC), where
+#      specificity = the number of non-`any` key fields — so an exact row beats
+#      a wildcard row at equal priority, and the id sort makes ties deterministic;
+#   3. no candidate → `fallback` is used and the miss is emitted as a structured
+#      review-queue event (Architecture, risk row "Rule-table gaps").
+#
+# `source: spec` rows are the seed rows of the §3.1 table, verbatim.
+# `source: extension` rows fill gaps the seed table leaves (the `clarify` intent,
+# non-beginner levels, and non-`check_answer` homework turns). Priorities are
+# chosen so every extension sits *below* the specific seed row it generalises.
+
+version: "1.0.0"
+description: >-
+  Trigger Matrix seeded from Technical Specification §3.1, extended with the
+  rows the seed table does not cover (clarify, level wildcards, generic homework).
+
+# Used when no row matches. Fail-safe, not fail-open: asking one understanding
+# question can never leak an answer. Every use is logged as an unmatched lookup.
+fallback:
+  id: TM_FALLBACK
+  primary: S07
+  supporting: []
+  note: Safe generic turn for an uncovered key; the miss feeds the review queue.
+
+rows:
+  - id: TM01
+    source: spec
+    intent: explain
+    learner_state: normal
+    student_level: beginner
+    special_handling: none
+    primary: S01
+    supporting: [S02, S07]
+    priority: 50
+
+  - id: TM02
+    source: extension
+    note: Same as TM01 for intermediate/advanced; sits below the beginner row.
+    intent: explain
+    learner_state: normal
+    student_level: any
+    special_handling: none
+    primary: S01
+    supporting: [S02, S07]
+    priority: 45
+
+  - id: TM03
+    source: spec
+    intent: explain
+    learner_state: confused
+    student_level: beginner
+    special_handling: none
+    primary: S05
+    supporting: [S02, S07]
+    priority: 70
+
+  - id: TM04
+    source: extension
+    note: Same as TM03 for intermediate/advanced.
+    intent: explain
+    learner_state: confused
+    student_level: any
+    special_handling: none
+    primary: S05
+    supporting: [S02, S07]
+    priority: 68
+
+  - id: TM05
+    source: extension
+    note: >-
+      `clarify` is absent from the §3.1 seed table; §2.1 gives its default
+      strategy as "Re-teach differently" = S05.
+    intent: clarify
+    learner_state: normal
+    student_level: any
+    special_handling: none
+    primary: S05
+    supporting: [S02, S07]
+    priority: 65
+
+  - id: TM06
+    source: extension
+    note: Confused clarify outranks normal clarify, mirroring TM01/TM03.
+    intent: clarify
+    learner_state: confused
+    student_level: any
+    special_handling: none
+    primary: S05
+    supporting: [S02, S07]
+    priority: 72
+
+  - id: TM07
+    source: spec
+    intent: solve
+    learner_state: normal
+    student_level: any
+    special_handling: none
+    primary: S03
+    supporting: [S07]
+    priority: 60
+
+  - id: TM08
+    source: spec
+    intent: solve
+    learner_state: confused
+    student_level: any
+    special_handling: none
+    primary: S04
+    supporting: [S03, S07]
+    priority: 75
+
+  - id: TM09
+    source: spec
+    note: "Seed row `hint + any / any`: a hint request is honoured in every context."
+    intent: hint
+    learner_state: any
+    student_level: any
+    special_handling: any
+    primary: S04
+    supporting: [S07]
+    priority: 65
+
+  - id: TM10
+    source: spec
+    intent: check_answer
+    learner_state: normal
+    student_level: any
+    special_handling: none
+    primary: S06
+    supporting: [S07]
+    priority: 70
+
+  - id: TM11
+    source: extension
+    note: Confused student checking an answer gets a hint alongside the feedback.
+    intent: check_answer
+    learner_state: confused
+    student_level: any
+    special_handling: none
+    primary: S06
+    supporting: [S04, S07]
+    priority: 72
+
+  - id: TM12
+    source: spec
+    note: The §10 worked example resolves here (homework beats the `none` rows).
+    intent: check_answer
+    learner_state: any
+    student_level: any
+    special_handling: homework
+    primary: S06
+    supporting: [S04]
+    priority: 60
+
+  - id: TM13
+    source: spec
+    intent: practice_quiz
+    learner_state: any
+    student_level: any
+    special_handling: none
+    primary: S08
+    supporting: [S06]
+    priority: 60
+
+  - id: TM14
+    source: spec
+    note: S01 in review framing.
+    intent: summarize_review
+    learner_state: normal
+    student_level: any
+    special_handling: none
+    primary: S01
+    supporting: [S07]
+    priority: 50
+
+  - id: TM15
+    source: extension
+    note: A confused review request is a re-explanation, not a recap.
+    intent: summarize_review
+    learner_state: confused
+    student_level: any
+    special_handling: none
+    primary: S05
+    supporting: [S07]
+    priority: 66
+
+  - id: TM16
+    source: extension
+    note: >-
+      Generic homework turn. Teaching Policy row 2 is hint-first + attempt
+      required, so the strategy default under homework is the hint. Priority sits
+      below TM12 so the specific check_answer homework row still wins.
+    intent: any
+    learner_state: any
+    student_level: any
+    special_handling: homework
+    primary: S04
+    supporting: [S03, S07]
+    priority: 55
+
+  - id: TM17
+    source: spec
+    note: >-
+      Seed row `any + any / assessment`, "per Teaching Policy row 3". Row 3 is
+      the strictest context in §3.4, and a hint toward a graded answer is still
+      substantive assistance toward that answer — it differs from a direct answer
+      in degree, not in kind. During an assessment the tutor stops being a help
+      channel: it acknowledges the context and puts the work back on the student.
+      Hence S07 alone, and no supporting clue-emitting strategy. Priority 90
+      makes assessment outrank every other row.
+    intent: any
+    learner_state: any
+    student_level: any
+    special_handling: assessment
+    primary: S07
+    supporting: []
+    priority: 90

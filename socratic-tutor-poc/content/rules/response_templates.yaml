@@ -1,0 +1,110 @@
+# Response templates — Tech Spec §4.1 (the seed set).
+#
+# The Response Planner is a template lookup plus rule application, no LLM (§4).
+# One template per strategy that can hold the primary slot; `supporting_blocks`
+# names the single block each strategy contributes when it is supporting.
+#
+# `blocks` classifies every block name so the planner can reason about them
+# structurally rather than by string matching. `kind` drives the constraint
+# rules: `solution` blocks are dropped when the full solution is withheld,
+# `question` blocks are counted against `max_questions`, and `hint` blocks make a
+# turn hint-first.
+#
+# `wait_for_student: depends_on_attempt_required` is §4.1's "Depends" for S06:
+# the turn waits exactly when Teaching Policy requires an attempt.
+
+version: "1.0.0"
+description: >-
+  Response templates from Technical Specification §4.1, extended with S07 (which
+  §4.1 omits but the Trigger Matrix now selects as a primary).
+
+blocks:
+  direct_answer: { kind: solution }
+  explanation: { kind: prose }
+  source_reference: { kind: prose }
+  reframed_explanation: { kind: prose }
+  state_evaluation: { kind: prose }
+  explain_feedback: { kind: prose }
+  next_action: { kind: prose }
+  one_example_or_analogy: { kind: example }
+  ordered_steps: { kind: steps }
+  single_hint: { kind: hint }
+  check_understanding: { kind: question }
+  single_check_question: { kind: question }
+  next_step_prompt: { kind: question }
+  student_attempt_prompt: { kind: question }
+  single_practice_question: { kind: question }
+
+templates:
+  - strategy: S01
+    source: spec
+    structure: [direct_answer, explanation, source_reference, check_understanding]
+    max_words: 120
+    follow_up: 1 check question
+    wait_for_student: false
+
+  - strategy: S03
+    source: spec
+    note: First step only elaborated (§4.1).
+    structure: [ordered_steps, next_step_prompt]
+    max_words: 100
+    follow_up: 1 attempt prompt
+    wait_for_student: true
+
+  - strategy: S04
+    source: spec
+    structure: [single_hint, student_attempt_prompt]
+    max_words: 50
+    follow_up: 1 attempt prompt
+    wait_for_student: true
+
+  - strategy: S05
+    source: spec
+    structure: [reframed_explanation, one_example_or_analogy, single_check_question]
+    max_words: 120
+    follow_up: 1 check question
+    wait_for_student: false
+
+  - strategy: S06
+    source: spec
+    structure: [state_evaluation, explain_feedback, next_action]
+    max_words: 100
+    follow_up: max 1
+    wait_for_student: depends_on_attempt_required
+
+  - strategy: S07
+    source: extension
+    note: >-
+      §4.1 has no S07 template because the seed Trigger Matrix never made it a
+      primary. It now does: S07 is the assessment row's strategy and the
+      unmatched-lookup fallback, so a turn can be planned entirely from it.
+      One question, no clue, waits for the answer.
+    structure: [single_check_question]
+    max_words: 50
+    follow_up: 1 check question
+    wait_for_student: true
+
+  - strategy: S08
+    source: spec
+    note: Answer withheld (§4.1).
+    structure: [single_practice_question]
+    max_words: 60
+    follow_up: "-"
+    wait_for_student: true
+
+# What each strategy contributes when it is a supporting strategy rather than
+# the primary.
+#
+# `requires_student_response` marks a block that acts on an answer the student
+# has not given yet. §3.3's own sequences put those in the *next* turn —
+# "Hint -> Student tries -> Guide" (S04 -> S03) and "Question -> Answer ->
+# Feedback" (S08 -> S06) — so the planner drops them from a turn that waits.
+supporting_blocks:
+  S01: { block: direct_answer }
+  S02: { block: one_example_or_analogy }
+  S03: { block: ordered_steps, requires_student_response: true }
+  S04: { block: single_hint }
+  S05: { block: reframed_explanation }
+  S06: { block: state_evaluation, requires_student_response: true }
+  S07: { block: check_understanding }
+  S08: { block: single_practice_question }

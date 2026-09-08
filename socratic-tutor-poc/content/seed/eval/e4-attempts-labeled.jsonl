@@ -1,0 +1,20 @@
+{"id":"e4-001","problem_id":"P01","attempt":"x = 7","expected_evaluation":"correct","notes":""}
+{"id":"e4-002","problem_id":"P01","attempt":"x = 17","expected_evaluation":"incorrect","notes":"added 5 instead of subtracting"}
+{"id":"e4-003","problem_id":"P02","attempt":"x = 5","expected_evaluation":"correct","notes":""}
+{"id":"e4-004","problem_id":"P02","attempt":"x = 80","expected_evaluation":"incorrect","notes":"multiplied instead of dividing"}
+{"id":"e4-005","problem_id":"P03","attempt":"x = 3","expected_evaluation":"correct","notes":""}
+{"id":"e4-006","problem_id":"P03","attempt":"x = 7","expected_evaluation":"incorrect","notes":"sign error moving constant; error_locus should identify step 1"}
+{"id":"e4-007","problem_id":"P03","attempt":"2x = 6, so x = 6/2","expected_evaluation":"partially_correct","notes":"correct method, stopped before final value"}
+{"id":"e4-008","problem_id":"P03","attempt":"I think you subtract 4 first but I'm not sure what happens after","expected_evaluation":"partially_correct","notes":"correct first step described, incomplete"}
+{"id":"e4-009","problem_id":"P04","attempt":"x = 5","expected_evaluation":"correct","notes":""}
+{"id":"e4-010","problem_id":"P04","attempt":"x = 1/3","expected_evaluation":"incorrect","notes":"subtracted 7 instead of adding: 3x = 1"}
+{"id":"e4-011","problem_id":"P05","attempt":"x = 4","expected_evaluation":"correct","notes":""}
+{"id":"e4-012","problem_id":"P05","attempt":"x = 2","expected_evaluation":"incorrect","notes":"combined 5x+2x=7x instead of subtracting; known misconception"}
+{"id":"e4-013","problem_id":"P05","attempt":"3x = 12","expected_evaluation":"partially_correct","notes":"correct consolidation, not finished"}
+{"id":"e4-014","problem_id":"P06","attempt":"x = 4","expected_evaluation":"correct","notes":""}
+{"id":"e4-015","problem_id":"P06","attempt":"x = 5.5","expected_evaluation":"incorrect","notes":"distributed only to first term: 2x + 3 = 14; known misconception"}
+{"id":"e4-016","problem_id":"P06","attempt":"2x + 6 = 14","expected_evaluation":"partially_correct","notes":"correct distribution, not solved"}
+{"id":"e4-017","problem_id":"P03","attempt":"the answer is B","expected_evaluation":"cannot_evaluate","notes":"references options that don't exist in the problem"}
+{"id":"e4-018","problem_id":"P05","attempt":"ครูครับ ผมได้ x = 4 ครับ","expected_evaluation":"correct","notes":"Thai-language attempt; evaluation must be language-independent"}
+{"id":"e4-019","problem_id":"P03","attempt":"หนูลบ 4 ทั้งสองข้าง ได้ 2x = 6 แล้วหาร 2 ได้ x = 3 ค่ะ","expected_evaluation":"correct","notes":"Thai, full working shown"}
+{"id":"e4-020","problem_id":"P04","attempt":"idk","expected_evaluation":"cannot_evaluate","notes":"no attempt content; must route to S07, never invent feedback"}

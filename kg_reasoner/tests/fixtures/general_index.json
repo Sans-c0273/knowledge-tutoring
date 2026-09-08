@@ -1,0 +1,24 @@
+{
+  "nodes": [
+    {"id": "gen-0001", "title": "Photosynthesis", "aliases": [], "file": "nodes/gen-0001.md", "definition_plain": "The process by which plants convert light energy into chemical energy.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=1", "file": "bio.pdf", "quote": "Photosynthesis converts light energy into chemical energy."}], "degree": 6},
+    {"id": "gen-0002", "title": "Light Energy", "aliases": [], "file": "nodes/gen-0002.md", "definition_plain": "Energy carried by photons, captured by chlorophyll.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=2", "file": "bio.pdf", "quote": "Chlorophyll captures light energy."}], "degree": 2},
+    {"id": "gen-0003", "title": "Water", "aliases": [], "file": "nodes/gen-0003.md", "definition_plain": "An input to photosynthesis, split to release oxygen.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=3", "file": "bio.pdf", "quote": ""}], "degree": 1},
+    {"id": "gen-0004", "title": "Carbon Dioxide", "aliases": ["CO2"], "file": "nodes/gen-0004.md", "definition_plain": "An input to photosynthesis, source of carbon for glucose.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=3", "file": "bio.pdf", "quote": ""}], "degree": 1},
+    {"id": "gen-0005", "title": "Glucose", "aliases": [], "file": "nodes/gen-0005.md", "definition_plain": "A sugar produced by photosynthesis, used for plant growth.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=4", "file": "bio.pdf", "quote": "Photosynthesis produces glucose."}], "degree": 1},
+    {"id": "gen-0006", "title": "Oxygen", "aliases": [], "file": "nodes/gen-0006.md", "definition_plain": "A gas released as a byproduct of photosynthesis.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=4", "file": "bio.pdf", "quote": "Photosynthesis produces oxygen."}], "degree": 1},
+    {"id": "gen-0008", "title": "Biology Basics", "aliases": [], "file": "nodes/gen-0008.md", "definition_plain": "The foundational unit covering cells, energy and reproduction.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=0", "file": "bio.pdf", "quote": "This unit introduces biology."}], "degree": 2},
+    {"id": "gen-0009", "title": "Cellular Respiration", "aliases": [], "file": "nodes/gen-0009.md", "definition_plain": "The process cells use to release energy from glucose.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=5", "file": "bio.pdf", "quote": "Cellular respiration releases energy from glucose."}], "degree": 2},
+    {"id": "gen-0010", "title": "Mitochondria", "aliases": [], "file": "nodes/gen-0010.md", "definition_plain": "The organelle where cellular respiration takes place.", "provider": "test", "model": "test", "sources": [{"locator": "bio.pdf#page=6", "file": "bio.pdf", "quote": "Cellular respiration occurs in the mitochondria."}], "degree": 1}
+  ],
+  "edges": [
+    {"source": "gen-0001", "target": "gen-0002", "type": "related_to", "relevance": 90},
+    {"source": "gen-0001", "target": "gen-0003", "type": "related_to", "relevance": 70},
+    {"source": "gen-0001", "target": "gen-0004", "type": "related_to", "relevance": 75},
+    {"source": "gen-0001", "target": "gen-0005", "type": "related_to", "relevance": 85},
+    {"source": "gen-0001", "target": "gen-0006", "type": "related_to", "relevance": 80},
+    {"source": "gen-0001", "target": "gen-0008", "type": "part_of"},
+    {"source": "gen-0009", "target": "gen-0008", "type": "part_of"},
+    {"source": "gen-0009", "target": "gen-0010", "type": "related_to", "relevance": 20}
+  ],
+  "meta": {"schema": "general", "corpus": "gen", "node_count": 9, "edge_count": 8, "dangling_edges": 0, "problems": []}
+}

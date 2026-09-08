@@ -1,0 +1,49 @@
+# Global rules — Tech Spec §4.2, applied to every response template.
+#
+# `rules` maps field-for-field onto `models.plan.GlobalRules`, whose defaults are
+# these same values. The YAML is the source of truth so a teacher can version a
+# change through /admin/tables without a code deploy.
+#
+# `student_level_wording` is §4.2's wording rule. It is prose for the generation
+# prompt's Policy layer; `ResponsePlan.language_level` carries the enum.
+#
+# `guardrail` configures the deterministic §6 output scan. It lives here rather
+# than in its own table because the guardrail enforces exactly these rules after
+# generation — one place to change a limit, two places that read it.
+
+version: "1.0.0"
+description: >-
+  Global response rules from Technical Specification §4.2, plus the §6 output
+  guardrail's thresholds and fallback copy.
+
+rules:
+  max_examples: 1
+  max_analogies: 1
+  max_questions: 1
+  source_reference_required: true
+  unsupported_claims_allowed: false
+  hint_first_and_full_solution_same_turn: false
+  quiz_answer_before_student_attempt: false
+  tone: clear_respectful_encouraging_non_patronizing
+
+student_level_wording:
+  beginner: Simple language, no unexplained jargon
+  intermediate: Normal terminology
+  advanced: Concise, technical
+
+guardrail:
+  # §6.3: over the plan's limits by more than this fraction is logged as a
+  # plan_violation and served anyway. Prompts get tuned from the logs.
+  count_tolerance: 0.25
+  # §6.1: one regeneration, then the fallback. Not configurable upward without a
+  # decision — every extra attempt is another chance to leak and another second
+  # of latency.
+  max_regenerations: 1
+  regeneration_note: >-
+    Your previous draft leaked the withheld solution. Produce only the hint, and
+    do not state, restate, or paraphrase the answer.
+  # Served when regeneration fails too. Deliberately content-free: it cannot
+  # leak because it says nothing about the problem.
+  fallback_text:
+    en: Let's work through it — what would you try first?
+    th: มาลองแก้ไปด้วยกันทีละขั้น ขั้นแรกคุณจะลองทำอะไร

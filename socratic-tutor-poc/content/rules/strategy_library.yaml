@@ -1,0 +1,63 @@
+# Strategy Library — Tech Spec §3.2 ("what does it mean?")
+#
+# The eight teaching strategies the Trigger Matrix may select. `required_behavior`
+# and `typical_next_action` are transcribed verbatim from the spec table; they are
+# the text the Response Planner and the glass-box UI render.
+#
+# `strategy_name` is the wire form that appears in `StrategySelection`
+# (Tech Spec §2.4) and MUST equal `socratic_tutor.models.enums.STRATEGY_NAMES`
+# for the same id — the loader fails the build if the two drift apart.
+
+version: "1.0.0"
+description: >-
+  Strategy Library S01-S08, transcribed from Technical Specification §3.2
+  (2026-09-01, approved with addendum).
+
+strategies:
+  - id: S01
+    name: Direct Answer / Explanation
+    strategy_name: direct_answer_explanation
+    required_behavior: Give a supported answer + explanation for the level
+    typical_next_action: Optional check understanding
+
+  - id: S02
+    name: Example / Analogy
+    strategy_name: example_analogy
+    required_behavior: Make the concept concrete with ONE example
+    typical_next_action: Return to the concept
+
+  - id: S03
+    name: Step-by-Step Guidance
+    strategy_name: step_by_step_guidance
+    required_behavior: Break the process into ordered steps
+    typical_next_action: Ask student to perform next step
+
+  - id: S04
+    name: Hint / Scaffold
+    strategy_name: hint_scaffold
+    required_behavior: Give the smallest useful clue, NOT the answer
+    typical_next_action: Wait for student attempt
+
+  - id: S05
+    name: Re-explain Differently
+    strategy_name: re_explain_differently
+    required_behavior: Change wording, example, or approach
+    typical_next_action: Check understanding
+
+  - id: S06
+    name: Feedback
+    strategy_name: feedback
+    required_behavior: Evaluate the student's work and explain it
+    typical_next_action: Correct, guide, or reinforce
+
+  - id: S07
+    name: Check Understanding
+    strategy_name: check_understanding
+    required_behavior: Ask ONE focused understanding question
+    typical_next_action: Wait for student response
+
+  - id: S08
+    name: Practice / Quiz
+    strategy_name: practice_quiz
+    required_behavior: Ask an appropriate practice question
+    typical_next_action: Evaluate with S06

@@ -1,0 +1,123 @@
+# Teaching Policy — Tech Spec §3.4 ("what is permitted?")
+#
+# The hard override at the top of the precedence order:
+#   Teaching Policy -> Special Handling -> Learner State -> Intent -> Student Level
+# Policy can veto anything the Trigger Matrix, Strategy Library and Combination
+# Rules chose (Architecture decision A2). Answer-withholding is a context rule,
+# not a model behaviour.
+#
+# Rows are selected by `applies_when`, not by priority: the three
+# `special_handling` rows are mutually exclusive, and `insufficient_rag_evidence`
+# is orthogonal and stacks on top of whichever one applies. When several rows
+# apply, permissions combine restrictively (allowed only if EVERY applicable row
+# allows it) and requirements combine inclusively (required if ANY row requires
+# it). `precedence` only decides which row is reported as *the* row that fired.
+#
+# `student_attempt_required: null` means the row is silent on attempts ("—" in
+# the spec table) and inherits from the other applicable rows.
+#
+# `direct_answer`, `attempt` and `check` carry the spec's own wording so the
+# glass-box UI can show the student-facing rule, not just the booleans.
+
+version: "1.1.0"
+description: >-
+  Teaching Policy contexts from Technical Specification §3.4, including the
+  anti-hallucination row (no retrieved evidence -> no direct factual answer).
+
+# The context a session starts in, before the student has said anything.
+#
+# **Read this before assuming withholding is the default: it is not.**
+# `special_handling` is detected from the student's own words, so a student who
+# simply never mentions that this is homework is served by `normal_learning`,
+# which permits a direct answer. As shipped, the withholding architecture
+# protects the students who volunteer that they should be protected.
+#
+# The engine guarantees the half of that which is a code property: a detected
+# `special_handling` may only ever move policy in the restrictive direction, so
+# no self-report — "this isn't homework", "my teacher said it's fine" — can
+# widen permissions relative to this baseline. The other half, a baseline set by
+# the teacher or the assignment record rather than by the conversation, is a
+# design decision outside these tables. This field is the seam it plugs into:
+# point it at `homework` and every unclassified turn becomes hint-first.
+baseline_context: normal_learning
+
+contexts:
+  - id: TP01
+    context: normal_learning
+    applies_when: { special_handling: none }
+    precedence: 10
+    direct_answer: Allowed
+    attempt: Optional
+    check: Recommended
+    direct_answer_allowed: true
+    full_solution_allowed_now: true
+    student_attempt_required: false
+    hint_first: false
+    factual_claims_require_evidence: false
+    allow_hints: true
+    allow_check: true
+    prohibited_strategies: []
+    veto_primary: null
+
+  - id: TP02
+    context: homework
+    applies_when: { special_handling: homework }
+    precedence: 30
+    direct_answer: Not initially - hint first
+    attempt: Required first
+    check: Recommended
+    direct_answer_allowed: false
+    full_solution_allowed_now: false
+    student_attempt_required: true
+    hint_first: true
+    factual_claims_require_evidence: false
+    allow_hints: true
+    allow_check: true
+    prohibited_strategies: []
+    veto_primary: S04
+
+  - id: TP03
+    context: assessment
+    applies_when: { special_handling: assessment }
+    precedence: 40
+    direct_answer: Prohibited
+    attempt: Required
+    check: Teacher-configurable
+    direct_answer_allowed: false
+    full_solution_allowed_now: false
+    student_attempt_required: true
+    hint_first: false
+    factual_claims_require_evidence: false
+    # Teacher-configurable, strict by default. A hint toward a graded answer is
+    # still substantive assistance toward that answer: it differs from a direct
+    # answer in degree, not in kind. During an assessment the tutor stops being a
+    # help channel. A teacher whose assessment policy permits hints flips
+    # `allow_hints`; the shipped default must be the strict reading.
+    allow_hints: false
+    # Spec §3.4 marks the Check column "Teacher-configurable".
+    allow_check: true
+    # Every clue-emitting strategy. S04 is governed by `allow_hints` instead, so
+    # that one switch moves both the insertion rule and the prohibition together.
+    prohibited_strategies: [S01, S02, S03]
+    veto_primary: S07
+
+  - id: TP04
+    context: insufficient_rag_evidence
+    applies_when: { rag_evidence_present: false }
+    precedence: 20
+    direct_answer: Prohibited (factual claims)
+    attempt: "-"
+    check: Optional
+    direct_answer_allowed: false
+    full_solution_allowed_now: false
+    student_attempt_required: null
+    hint_first: true
+    factual_claims_require_evidence: true
+    allow_hints: true
+    allow_check: true
+    prohibited_strategies: []
+    veto_primary: S04
+    note: >-
+      Anti-hallucination rule (§3.4 row 4, Architecture A2). No retrieved
+      evidence -> no direct factual answer; the planner routes to S07/S04 and the
+      response states the limitation.

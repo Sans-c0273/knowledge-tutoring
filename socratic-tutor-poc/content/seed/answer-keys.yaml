@@ -1,0 +1,92 @@
+# Canonical solutions — SERVER-SIDE ONLY. Never enters Call C's context
+# when full_solution_allowed = false. Used by Call B (solve-then-compare)
+# and the deterministic guardrail scan.
+problems:
+  - id: P01
+    topic: One-Step Linear Equations
+    statement_en: "Solve: x + 5 = 12"
+    statement_th: "จงแก้สมการ: x + 5 = 12"
+    answer: "x = 7"
+    canonical_steps:
+      - "Subtract 5 from both sides: x + 5 - 5 = 12 - 5"
+      - "x = 7"
+    guardrail_tokens: ["7"]
+  - id: P02
+    topic: One-Step Linear Equations
+    statement_en: "Solve: 4x = 20"
+    statement_th: "จงแก้สมการ: 4x = 20"
+    answer: "x = 5"
+    canonical_steps:
+      - "Divide both sides by 4: 4x/4 = 20/4"
+      - "x = 5"
+    guardrail_tokens: ["5"]
+  - id: P03
+    topic: Two-Step Linear Equations
+    statement_en: "Solve: 2x + 4 = 10"
+    statement_th: "จงแก้สมการ: 2x + 4 = 10"
+    answer: "x = 3"
+    canonical_steps:
+      - "Subtract 4 from both sides: 2x = 6"
+      - "Divide both sides by 2: x = 3"
+    guardrail_tokens: ["3"]
+    common_misconceptions:
+      - wrong_answer: "x = 7"
+        error_locus: "Added 4 instead of subtracting (sign error moving the constant)"
+  - id: P04
+    topic: Two-Step Linear Equations
+    statement_en: "Solve: 3x - 7 = 8"
+    statement_th: "จงแก้สมการ: 3x - 7 = 8"
+    answer: "x = 5"
+    canonical_steps:
+      - "Add 7 to both sides: 3x = 15"
+      - "Divide both sides by 3: x = 5"
+    guardrail_tokens: ["5"]
+  - id: P05
+    topic: Variables on Both Sides
+    statement_en: "Solve: 5x - 3 = 2x + 9"
+    statement_th: "จงแก้สมการ: 5x - 3 = 2x + 9"
+    answer: "x = 4"
+    canonical_steps:
+      - "Subtract 2x from both sides: 3x - 3 = 9"
+      - "Add 3 to both sides: 3x = 12"
+      - "Divide both sides by 3: x = 4"
+    guardrail_tokens: ["4"]
+    common_misconceptions:
+      - wrong_answer: "x = 2"
+        error_locus: "Combined 5x and 2x into 7x (moved the term without changing sign)"
+  - id: P06
+    topic: Distributive Property
+    statement_en: "Solve: 2(x + 3) = 14"
+    statement_th: "จงแก้สมการ: 2(x + 3) = 14"
+    answer: "x = 4"
+    canonical_steps:
+      - "Distribute: 2x + 6 = 14"
+      - "Subtract 6 from both sides: 2x = 8"
+      - "Divide both sides by 2: x = 4"
+    guardrail_tokens: ["4"]
+    common_misconceptions:
+      - wrong_answer: "x = 5.5"
+        error_locus: "Distributed 2 only to x, giving 2x + 3 = 14"
+
+  # P07 exists to make a measurement possible, not to teach a new topic.
+  #
+  # Every other seed key is a bare numeric value — the case both the leak
+  # guardrail and the deterministic answer checker are strongest on. A suite
+  # built only on P01-P06 therefore measures the easy half and reports it as the
+  # whole. Against a prose answer the guardrail degrades to substring matching
+  # plus a whitespace fold, and `math_checker` declines to grade at all (no final
+  # numeric value), which is also where the anti-sycophancy guarantee stops
+  # applying. Neither gap is visible without a key of this shape.
+  - id: P07
+    topic: Inverse Operations
+    statement_en: "In your own words: why must you do the same operation to both sides of an equation?"
+    statement_th: "อธิบายด้วยคำพูดของตัวเอง ทำไมจึงต้องทำการดำเนินการเดียวกันกับสมการทั้งสองข้าง"
+    answer: "Because an equation says both sides are equal, so changing one side without changing the other breaks that equality."
+    canonical_steps:
+      - "An equation states that two expressions have the same value."
+      - "An operation applied to only one side changes that side's value."
+      - "The two sides are then no longer equal, so the statement is no longer true."
+    guardrail_tokens: ["breaks that equality", "no longer equal"]
+    common_misconceptions:
+      - wrong_answer: "Because that's the rule."
+        error_locus: "States the procedure without the reason; no understanding demonstrated."

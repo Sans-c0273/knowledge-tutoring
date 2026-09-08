@@ -1,0 +1,93 @@
+# KL Map -> Strategy rules (KM rules) — Tech Spec §3.5
+#
+# KM01-KM03 ship in the POC. KM04 and KM05 are present but `enabled: false`;
+# a disabled rule is never matched and never contributes knowledge guidance.
+#
+# Hard rule (Tech Spec §3.5, Architecture A5, non-negotiable): a prerequisite
+# edge existing does NOT imply the student lacks it. KM02's action is
+# check-*or*-scaffold — probe the prerequisite with one question, scaffold only
+# on a failed probe. The system must never assert "you don't understand X" from
+# graph structure alone.
+#
+# O2 tie-break (Architecture): when KM02 and KM03 both match, KM02 wins and both
+# matches are logged. That is what the priority ordering below encodes.
+
+version: "1.0.0"
+description: >-
+  KL Map to Strategy rules from Technical Specification §3.5. KM01-KM03 active
+  for the POC; KM04-KM05 declared but disabled.
+
+rules:
+  - id: KM01
+    enabled: true
+    priority: 10
+    condition:
+      learner_state: normal
+    kl_map_action: Current topic only
+    strategy_effect: No strategy change; nearby concepts usable in explanation
+    knowledge_action: use_current_topic_context
+    target: current_topic
+
+  - id: KM02
+    enabled: true
+    priority: 30
+    condition:
+      learner_state: confused
+      requires: immediate_prerequisite
+    kl_map_action: Return prerequisite (distance 1)
+    strategy_effect: Add check_or_scaffold_prerequisite guidance
+    knowledge_action: check_or_scaffold_prerequisite
+    target: prerequisite
+    relation: prerequisite_of
+    direction: forward
+    max_distance: 1
+    note: >-
+      Check-or-scaffold, never a diagnosis. The edge is a hypothesis about the
+      domain, not a claim about this student.
+
+  - id: KM03
+    enabled: true
+    priority: 20
+    condition:
+      intent: clarify
+      requires: related_concept
+    kl_map_action: Return related concept
+    strategy_effect: May use for alternative explanation
+    knowledge_action: use_related_concept_for_reexplanation
+    target: related_topic
+    relation: null
+    direction: forward
+    note: >-
+      `relation` is deliberately null. `KnowledgeContext` has three buckets for
+      five relations, so `domain/klmap/lookup.py` folds `related_to`, `part_of`
+      and `uses` into `related_topics` and `RelatedTopic` does not carry the edge
+      type. Declaring `related_to` here would assert an edge type this rule
+      cannot verify. Set it once `RelatedTopic` carries its own `relation`, and
+      have the selector propagate that instead of this declared value.
+
+  - id: KM04
+    enabled: false
+    priority: 15
+    condition:
+      intent: practice_quiz
+    kl_map_action: Current topic relationship
+    strategy_effect: Generate practice on current topic
+    knowledge_action: practice_current_topic_relationship
+    target: current_topic
+    note: Not POC (Tech Spec §3.5).
+
+  - id: KM05
+    enabled: false
+    priority: 5
+    condition:
+      requires: next_topic
+    kl_map_action: Return next topic
+    strategy_effect: Optional extension/challenge
+    knowledge_action: null
+    target: next_topic
+    relation: next_topic
+    direction: forward
+    note: >-
+      Not POC (Tech Spec §3.5). `knowledge_action` is null because the POC's
+      KnowledgeAction vocabulary (§2.4) has no next-topic member; assigning one
+      is a spec change to be made when KM05 is enabled.

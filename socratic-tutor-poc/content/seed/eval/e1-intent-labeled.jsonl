@@ -1,0 +1,40 @@
+{"id":"e1-001","lang":"en","message":"What is a linear equation?","context":[],"intent":"explain","learner_state":"normal","special_handling":"none"}
+{"id":"e1-002","lang":"th","message":"สมการเชิงเส้นคืออะไรครับ","context":[],"intent":"explain","learner_state":"normal","special_handling":"none"}
+{"id":"e1-003","lang":"en","message":"I still don't get it. Can you explain it again?","context":["assistant: A linear equation is an equation where the variable's highest power is 1..."],"intent":"clarify","learner_state":"confused","special_handling":"none"}
+{"id":"e1-004","lang":"th","message":"ยังไม่เข้าใจเลยครับ อธิบายใหม่อีกทีได้ไหม","context":["assistant: สมการเชิงเส้นคือสมการที่ตัวแปรมีเลขชี้กำลังสูงสุดเท่ากับ 1..."],"intent":"clarify","learner_state":"confused","special_handling":"none"}
+{"id":"e1-005","lang":"en","message":"How do I solve 2x + 4 = 10?","context":[],"intent":"solve","learner_state":"normal","special_handling":"none"}
+{"id":"e1-006","lang":"th","message":"ข้อนี้ทำยังไงครับ 3x - 7 = 8","context":[],"intent":"solve","learner_state":"normal","special_handling":"none"}
+{"id":"e1-007","lang":"en","message":"I'm confused. How do I even start with 5x - 3 = 2x + 9?","context":[],"intent":"solve","learner_state":"confused","special_handling":"none"}
+{"id":"e1-008","lang":"th","message":"งงมากเลยค่ะ โจทย์ 5x - 3 = 2x + 9 เริ่มยังไงดี","context":[],"intent":"solve","learner_state":"confused","special_handling":"none"}
+{"id":"e1-009","lang":"en","message":"Just give me a hint, don't tell me the answer","context":["user: How do I solve 2x + 4 = 10?"],"intent":"hint","learner_state":"normal","special_handling":"none"}
+{"id":"e1-010","lang":"th","message":"ขอคำใบ้หน่อย อย่าเพิ่งเฉลยนะ","context":["user: ข้อนี้ทำยังไง 2x + 4 = 10"],"intent":"hint","learner_state":"normal","special_handling":"none"}
+{"id":"e1-011","lang":"en","message":"I got x = 7, is that right?","context":["user: How do I solve 2x + 4 = 10?"],"intent":"check_answer","learner_state":"normal","special_handling":"none"}
+{"id":"e1-012","lang":"th","message":"หนูได้ x = 7 ถูกไหมคะ","context":["user: โจทย์ 2x + 4 = 10"],"intent":"check_answer","learner_state":"normal","special_handling":"none"}
+{"id":"e1-013","lang":"en","message":"This is for my homework — I got x = 3 for problem 2, can you check it?","context":[],"intent":"check_answer","learner_state":"normal","special_handling":"homework"}
+{"id":"e1-014","lang":"th","message":"การบ้านข้อ 2 หนูได้ x = 3 ช่วยตรวจให้หน่อยค่ะ","context":[],"intent":"check_answer","learner_state":"normal","special_handling":"homework"}
+{"id":"e1-015","lang":"en","message":"Just give me the homework answer, I don't have time","context":[],"intent":"solve","learner_state":"normal","special_handling":"homework"}
+{"id":"e1-016","lang":"th","message":"บอกคำตอบการบ้านมาเลย ไม่มีเวลาแล้ว","context":[],"intent":"solve","learner_state":"normal","special_handling":"homework"}
+{"id":"e1-017","lang":"en","message":"I'm taking my test right now, what's the answer to 4x = 20?","context":[],"intent":"solve","learner_state":"normal","special_handling":"assessment"}
+{"id":"e1-018","lang":"th","message":"กำลังสอบอยู่ ข้อ 4x = 20 ตอบอะไร","context":[],"intent":"solve","learner_state":"normal","special_handling":"assessment"}
+{"id":"e1-019","lang":"en","message":"Quiz me on linear equations","context":[],"intent":"practice_quiz","learner_state":"normal","special_handling":"none"}
+{"id":"e1-020","lang":"th","message":"ขอแบบฝึกหัดเรื่องสมการเชิงเส้นหน่อยครับ","context":[],"intent":"practice_quiz","learner_state":"normal","special_handling":"none"}
+{"id":"e1-021","lang":"en","message":"Can you summarize what we covered today?","context":["...several turns about two-step equations..."],"intent":"summarize_review","learner_state":"normal","special_handling":"none"}
+{"id":"e1-022","lang":"th","message":"ช่วยสรุปที่เรียนวันนี้ให้หน่อยได้ไหมคะ","context":["...several turns about two-step equations..."],"intent":"summarize_review","learner_state":"normal","special_handling":"none"}
+{"id":"e1-023","lang":"en","message":"Why does the sign change when I move a number across the equals sign?","context":[],"intent":"explain","learner_state":"normal","special_handling":"none"}
+{"id":"e1-024","lang":"th","message":"ทำไมย้ายข้างแล้วต้องเปลี่ยนเครื่องหมายครับ","context":[],"intent":"explain","learner_state":"normal","special_handling":"none"}
+{"id":"e1-025","lang":"en","message":"I tried 2(x+3)=14 and got x = 5.5. Where did I go wrong?","context":[],"intent":"check_answer","learner_state":"confused","special_handling":"none"}
+{"id":"e1-026","lang":"th","message":"ข้อ 2(x+3)=14 หนูได้ x = 5.5 ผิดตรงไหนคะ","context":[],"intent":"check_answer","learner_state":"confused","special_handling":"none"}
+{"id":"e1-027","lang":"en","message":"ok what next","context":["assistant: ...subtract 4 from both sides first. What do you get?","user: 2x = 6"],"intent":"solve","learner_state":"normal","special_handling":"none"}
+{"id":"e1-028","lang":"th","message":"แล้วต่อยังไงครับ","context":["assistant: ...ลบ 4 ทั้งสองข้างก่อน ได้เท่าไหร่ครับ","user: 2x = 6"],"intent":"solve","learner_state":"normal","special_handling":"none"}
+{"id":"e1-029","lang":"en","message":"Explain it differently please, the scale thing didn't make sense","context":["assistant: Think of an equation as a balanced scale..."],"intent":"clarify","learner_state":"confused","special_handling":"none"}
+{"id":"e1-030","lang":"th","message":"อธิบายแบบอื่นได้ไหมคะ เรื่องตาชั่งฟังแล้วไม่เข้าใจ","context":["assistant: ลองนึกถึงตาชั่งที่สมดุล..."],"intent":"clarify","learner_state":"confused","special_handling":"none"}
+{"id":"e1-031","lang":"en","message":"Give me a harder one","context":["assistant: Correct! x = 5. Want another?","user: (previous quiz answered correctly)"],"intent":"practice_quiz","learner_state":"normal","special_handling":"none"}
+{"id":"e1-032","lang":"th","message":"ขอข้อยากกว่านี้หน่อยครับ","context":["assistant: ถูกต้องค่ะ x = 5 เอาอีกข้อไหมคะ"],"intent":"practice_quiz","learner_state":"normal","special_handling":"none"}
+{"id":"e1-033","lang":"en","message":"what is 7 minus 12","context":[],"intent":"solve","learner_state":"normal","special_handling":"none"}
+{"id":"e1-034","lang":"en","message":"I keep getting this wrong and I don't know why","context":["user: I got x = 2","assistant: Not quite...","user: then x = 6?","assistant: Also not right..."],"intent":"clarify","learner_state":"confused","special_handling":"none"}
+{"id":"e1-035","lang":"th","message":"ทำผิดตลอดเลย ไม่รู้ผิดตรงไหน ท้อแล้ว","context":["user: ได้ x = 2","assistant: ยังไม่ถูกค่ะ...","user: งั้น x = 6?","assistant: ยังไม่ใช่ค่ะ..."],"intent":"clarify","learner_state":"confused","special_handling":"none"}
+{"id":"e1-036","lang":"en","message":"Is x = 4 correct for number 5? It's a homework problem by the way","context":[],"intent":"check_answer","learner_state":"normal","special_handling":"homework"}
+{"id":"e1-037","lang":"th","message":"ข้อ 5 ในการบ้าน ตอบ x = 4 ถูกไหมครับ","context":[],"intent":"check_answer","learner_state":"normal","special_handling":"homework"}
+{"id":"e1-038","lang":"en","message":"Test me before my exam tomorrow","context":[],"intent":"practice_quiz","learner_state":"normal","special_handling":"none"}
+{"id":"e1-039","lang":"th","message":"พรุ่งนี้สอบแล้ว ช่วยติวหน่อยครับ ขอโจทย์มาลองทำ","context":[],"intent":"practice_quiz","learner_state":"normal","special_handling":"none"}
+{"id":"e1-040","lang":"en","message":"So combining like terms is basically just adding the numbers in front?","context":["assistant: ...like terms have the same variable..."],"intent":"check_answer","learner_state":"normal","special_handling":"none"}
